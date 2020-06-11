@@ -5,6 +5,7 @@
 package com.coinpaprika.apiclient.extensions
 
 import com.coinpaprika.apiclient.exception.NetworkConnectionException
+import com.coinpaprika.apiclient.exception.NotFoundError
 import com.coinpaprika.apiclient.exception.ServerConnectionError
 import com.coinpaprika.apiclient.exception.TooManyRequestsError
 import io.reactivex.Observable
@@ -22,6 +23,7 @@ suspend fun <T : Any> handleCall(call: suspend () -> Response<T>): T {
         return response.body()!!
     } else when (response.code()) {
         429  -> throw TooManyRequestsError()
+        404  -> throw NotFoundError()
         else -> throw ServerConnectionError()
     }
 }
